@@ -1,0 +1,28 @@
+<div class="row">
+  <div class="row">
+    <div class="small-3 small-centered columns">{{product.name}}</div>
+  </div>
+
+  <div class="row">
+    <div class="small-3 columns">
+      <a href="#/products/{{product.entity_id}}" class="th radius"><img ng-src="{{product.image_url}}"></a>
+    </div>
+    <div class="small-4 columns">
+      <ul class="small-block-grid-3">
+        <li ng-repeat="image in productImages">
+          <a class="th radius">
+            <img ng-src="{{image.url}}" alt="{{product.name}}" ng-click="setImage(image.url)"/>
+          </a>
+        </li>
+      </ul>
+    </div>
+    <div class="large-offset-2"></div>
+  </div>
+  <div class="row">
+    {{product.short_description}}
+  </div>
+  <div class="row" ng-bind-html-unsafe="product.description"></div>
+  <div class="row" ng-bind-html-unsafe="product.in_depth"></div>
+
+</div>
+

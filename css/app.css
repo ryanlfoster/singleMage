@@ -1,0 +1,8 @@
+/* line 2, ../sass/app.scss */
+ul.pricing-table li.title {
+  min-height: 80px;
+}
+/* line 6, ../sass/app.scss */
+ul.pricing-table li.description {
+  min-height: 160px;
+}

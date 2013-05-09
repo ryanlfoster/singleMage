@@ -8,8 +8,17 @@
 
 /* Controllers */
 
-function CategoryCtrl($scope, Category) {
-  $scope.categories = Category.query();
+function CategoryCtrl($scope, TopCategory, Category) {
+  $scope.topCategories = TopCategory.query();
+
+  $scope.showSubCategories = function(categoryId){
+    if (!$scope.topCategories[categoryId].children){
+      Category.get({categoryId: categoryId}, function(category) {
+        $scope.topCategories[categoryId].children = category.children;
+        console.log($scope.topCategories);
+      });
+    }
+  };
 }
 
 function ProductListCtrl($scope, Product) {

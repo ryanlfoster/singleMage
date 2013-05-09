@@ -1,18 +1,14 @@
-<div class="row">
-
-  <ul class="products large-block-grid-4">
-    <li ng-repeat="product in products">
-      <ul class="pricing-table">
-        <li class="title">{{product.name}}</li>
-        <!--<li class="title">{{product.name + ' - ' + product.sku}}</li>-->
-        <li class="bullet-item">
-          <a href="#/products/{{product.entity_id}}" class="th radius"><img ng-src="{{product.image_url}}"></a>
-        </li>
-        <li class="price">${{product.final_price_with_tax}}</li>
-        <li class="description">{{product.short_description}}</li>
-        <li class="cta-button"><a class="button" href="#">Buy Now</a></li>
-      </ul>
-    </li>
-  </ul>
-
-</div>
+<ul class="products large-block-grid-3">
+  <li ng-repeat="product in products">
+    <ul class="pricing-table">
+      <li class="title">{{product.name}}</li>
+      <!--<li class="title">{{product.name + ' - ' + product.sku}}</li>-->
+      <li class="bullet-item">
+        <a href="#/products/{{product.entity_id}}" class="th radius"><img ng-src="{{product.image_url}}"></a>
+      </li>
+      <li class="price">${{product.final_price_with_tax}}</li>
+      <li class="description">{{product.short_description}}</li>
+      <li class="cta-button"><a class="button" href="#">Buy Now</a></li>
+    </ul>
+  </li>
+</ul>

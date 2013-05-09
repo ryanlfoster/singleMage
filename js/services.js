@@ -12,7 +12,7 @@ var mageShopModule = angular.module('mageShopServices', ['ngResource']);
 
 mageShopModule
   .factory('Product', function ($resource) {
-    return $resource('../api/rest/products/:productId', {}, {
+    return $resource('../api/rest/products/:productId?limit=6', {}, {
       query: {method: 'GET', params: {productId: ''}, isArray: true}
     });
   })
@@ -21,8 +21,13 @@ mageShopModule
       query: {method: 'GET', params: {productId: ''}, isArray: true}
     });
   })
-  .factory('Category', function($resource){
+  .factory('TopCategory', function ($resource) {
     return $resource('../api/rest/single/category/store/1/top', {}, {
-      query: {method:'GET', params:{}}
+      query: {method: 'GET', params: {}}
+    });
+  })
+  .factory('Category', function ($resource) {
+    return $resource('../api/rest/single/category/:categoryId', {}, {
+      query: {method: 'GET', params: {categoryId: ''}, isArray: true}
     });
   });

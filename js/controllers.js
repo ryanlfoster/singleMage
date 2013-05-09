@@ -8,6 +8,10 @@
 
 /* Controllers */
 
+function CategoryCtrl($scope, Category) {
+  $scope.categories = Category.query();
+}
+
 function ProductListCtrl($scope, Product) {
   $scope.products = Product.query();
 }
@@ -24,9 +28,9 @@ function ProductDetailCtrl($scope, $routeParams, Product, ProductImages) {
   });
 
   $scope.setImage = function(imageUrl) {
-    console.log(imageUrl)
     $scope.product.image_url = imageUrl;
-  }
+  };
+
 }
 
 //ProductDetailCtrl.$inject = ['$scope', '$routeParams', 'Product', 'ProductImages'];

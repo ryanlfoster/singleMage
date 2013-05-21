@@ -1,7 +1,5 @@
-<div class="row">
-  <div class="row">
-    <div class="small-3 small-centered columns">{{product.name}}</div>
-  </div>
+<article class="product large-12 columns">
+  <h3>{{product.name}}</h3>
 
   <div class="row">
     <div class="small-3 columns">
@@ -18,11 +16,9 @@
     </div>
     <div class="large-offset-2"></div>
   </div>
-  <div class="row">
-    {{product.short_description}}
-  </div>
-  <div class="row" ng-bind-html-unsafe="product.description"></div>
-  <div class="row" ng-bind-html-unsafe="product.in_depth"></div>
+  <h6>{{product.short_description}}</h6>
+  <p ng-bind-html-unsafe="product.description"></p>
+  <p class="small-11 small-centered columns" ng-bind-html-unsafe="product.in_depth"></p>
 
-</div>
+</article>
 

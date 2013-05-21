@@ -6,3 +6,8 @@ ul.pricing-table li.title {
 ul.pricing-table li.description {
   min-height: 160px;
 }
+
+/* line 11, ../sass/app.scss */
+#login_form {
+  min-height: 300px;
+}

@@ -1,0 +1,7 @@
+<a ng-href="#/products/?categoryId={{ category.entity_id }}">{{ category.name }}</a>
+<ul class="dropdown">
+  <li ng-repeat="category in category.children" ng-class="{'has-dropdown' : category.children_count>0}"
+      ng-include="'templates/category-node.html'" ng-mouseover="showSubCategories(category.entity_id)">
+        <a ng-href="#/products/?categoryId={{ category.entity_id }}">{{ category.name }}</a>
+      </li>
+</ul>

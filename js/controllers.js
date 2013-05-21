@@ -9,37 +9,254 @@
 /* Controllers */
 
 function CategoryCtrl($scope, TopCategory, Category) {
+  var cachedCategories = {};
   $scope.topCategories = TopCategory.query();
 
-  $scope.showSubCategories = function(categoryId){
-    if (!$scope.topCategories[categoryId].children){
-      Category.get({categoryId: categoryId}, function(category) {
-        $scope.topCategories[categoryId].children = category.children;
-        console.log($scope.topCategories);
+  $scope.showSubCategories = function (categoryId) {
+    //TODO rewrite - add cache and sub-access
+    if (!cachedCategories[categoryId]) {
+      Category.get({categoryId: categoryId}, function (category) {
+        if (!jQuery.isEmptyObject(category.children)) {
+          var path = category.path.split('/');
+          //first 2 elements  in magento categories hierarchy - it's global parent category and store root category
+          path.splice(0, 2);
+
+          //assign top-level category
+          var tmpCategories = $scope.topCategories[path.splice(0, 1)];
+          for (var key in path) {
+            if (path.hasOwnProperty(key)) {
+              var index = path[key];
+              tmpCategories = tmpCategories['children'][index];
+            }
+          }
+          tmpCategories.children = category.children;
+        }
+
+        cachedCategories[categoryId] = true;
       });
     }
+
   };
 }
 
-function ProductListCtrl($scope, Product) {
-  $scope.products = Product.query();
+function ProductListCtrl($scope, $routeParams, Product) {
+  $scope.products = Product.query({categoryId: $routeParams.categoryId});
 }
 
 //PhoneListCtrl.$inject = ['$scope', 'Phone'];
 
 
-
 function ProductDetailCtrl($scope, $routeParams, Product, ProductImages) {
-  $scope.product = Product.get({productId: $routeParams.productId}, function(product) {
-  });
+  $scope.product = Product.get({productId: $routeParams.productId});
 
-  $scope.productImages = ProductImages.query({productId: $routeParams.productId}, function(productImages) {
-  });
+  $scope.productImages = ProductImages.query({productId: $routeParams.productId});
 
-  $scope.setImage = function(imageUrl) {
+  $scope.setImage = function (imageUrl) {
     $scope.product.image_url = imageUrl;
   };
 
 }
 
 //ProductDetailCtrl.$inject = ['$scope', '$routeParams', 'Product', 'ProductImages'];
+
+
+function AuthCtrl($scope, $http, $routeParams, $cookieStore) {
+  $scope.callbackUrl = "http://magento-demo.local/singleMage/index.html#/login/oauth_token";
+  $scope.consumerKey = 'i6zwhtf7jd7t9yql2jug5oerj4tyugd9';
+  $scope.consumerSecret = '2bdtt65b2zyxrtmlgyt850jasd6t40f1';
+  $scope.requestToken = null;
+  $scope.requestVerifier = null;
+  $scope.token = null;
+  $scope.tokenSecret = null;
+  $scope.signatureMethod = 'PLAINTEXT';
+
+
+  $scope.initUrl = '../oauth/initiate';
+  $scope.initAction = 'POST';
+  $scope.initToken = null;
+  $scope.initTokenSecret = null;
+
+
+  $scope.authUrl = '../oauth/authorize/simple';
+  $scope.authAction = 'GET';
+
+  $scope.accessUrl = '../oauth/token';
+  $scope.accessAction = 'POST';
+
+  $scope.loginForm = '';
+  $scope.isLogged = false;
+
+  $scope.init = function () {
+
+    var oAuth = OAuthSimple($scope.consumerKey, $scope.consumerSecret);
+    var oAuthInit = oAuth.sign({
+      action: $scope.initAction,
+      path: $scope.initUrl,
+      method: $scope.signatureMethod,
+      parameters: {
+        oauth_callback: $scope.callbackUrl,
+        oauth_method: $scope.signatureMethod
+      }
+    });
+
+
+    //init step
+    $http({
+      method: $scope.initAction,
+      url: $scope.initUrl,
+      headers: {
+        Authorization: oAuthInit.header
+      }
+    }).
+      success(function (data, status) {
+        //authorize step
+        var authData = oAuth._parseParameterString(data);
+
+        //set temp tokens
+        $scope.initToken = authData.oauth_token;
+        $scope.initTokenSecret = authData.oauth_token_secret;
+
+        //we need store secret for future window reload
+        $cookieStore.put('initTokenSecret', $scope.initTokenSecret);
+
+
+        var oAuthAuth = oAuth.sign({
+          action: $scope.authAction,
+          path: $scope.authUrl,
+          parameters: {
+            oauth_token: $scope.initToken,
+            oauth_token_secret: $scope.initTokenSecret
+          }
+        });
+
+        $http({
+          method: $scope.authAction,
+          url: oAuthAuth.signed_url,
+          headers: {
+            Authorization: oAuthAuth.header
+          }
+        }).
+          success(function (data, status) {
+            //Access step
+            $scope.loginForm = data;
+
+            //TODO fix form getter
+            var authForm = jQuery(data).find('#oauth_authorize_confirm');
+
+            if (authForm.length !== 0) {
+              window.location = (authForm.attr('action') + "?oauth_token=" + authForm.find('input[name="oauth_token"]').val());
+            } else {
+              var loginForm = jQuery(data).find('#loginForm')
+              if (loginForm.length !== 0) {
+                alert('TODO - implement authentication');
+              } else {
+                alert('TODO - implement smthing unknown');
+              }
+            }
+          }).
+          error(function (data, status) {
+            data = data || "Auth request failed";
+            console.log(data);
+            console.log(status);
+          });
+
+
+      }).
+      error(function (data, status) {
+        data = data || "Init request failed";
+        console.log(data);
+        console.log(status);
+      });
+  };
+
+  $scope.accessStep = function () {
+    $scope.requestToken = $routeParams.oauth_token;
+    $scope.requestVerifier = $routeParams.oauth_verifier;
+    $scope.initTokenSecret = $cookieStore.get('initTokenSecret');
+
+    var oAuth = OAuthSimple($scope.consumerKey, $scope.consumerSecret);
+
+    var oAuthAccess = oAuth.sign({
+      action: $scope.accessAction,
+      path: $scope.accessUrl,
+      method: $scope.signatureMethod,
+      parameters: {
+        oauth_token: $scope.requestToken,
+        oauth_verifier: $scope.requestVerifier,
+        oauth_method: $scope.signatureMethod
+      },
+      signatures: {
+        oauth_token_secret: $scope.initTokenSecret
+      }
+    });
+
+    $http({
+      method: $scope.accessAction,
+      url: $scope.accessUrl,
+      headers: {
+        Authorization: oAuthAccess.header
+      }
+    }).
+      success(function (data, status) {
+        //Get access tokens
+        var accessData = oAuth._parseParameterString(data);
+
+        //set access tokens
+        $scope.token = accessData.oauth_token;
+        $scope.tokenSecret = accessData.oauth_token_secret;
+        $cookieStore.put('token', $scope.token);
+        $cookieStore.put('tokenSecret', $scope.tokenSecret);
+
+        $scope.isLogged = true;
+      }).
+      error(function (data, status) {
+        data = data || "Access request failed";
+        console.log(data);
+        console.log(status);
+      });
+  };
+
+  $scope.getInfo = function(){
+    var infoUrl = '../api/rest/customers/1';
+    var oAuth = OAuthSimple($scope.consumerKey, $scope.consumerSecret);
+    $scope.token = $cookieStore.get('token');
+    $scope.tokenSecret = $cookieStore.get('tokenSecret');
+
+    var oAuthAccess = oAuth.sign({
+      path: infoUrl,
+      method: $scope.signatureMethod,
+      parameters: {
+        oauth_token: $scope.token,
+        oauth_method: $scope.signatureMethod
+      },
+      signatures: {
+        oauth_token_secret: $scope.tokenSecret
+      }
+    });
+
+    console.log(oAuthAccess);
+
+    $http({
+      url: infoUrl,
+      method: 'GET',
+      headers: {
+        Authorization: oAuthAccess.header
+      }
+    }).
+      success(function (data, status) {
+        console.log(data);
+        //Get access tokens
+//        var accessData = oAuth._parseParameterString(data);
+
+
+
+      }).
+      error(function (data, status) {
+        data = data || "Customer info request failed";
+        console.log(data);
+        console.log(status);
+      });
+  }
+
+
+}

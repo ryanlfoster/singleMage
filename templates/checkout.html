@@ -1,0 +1,42 @@
+<!--address-->
+<div class="row">
+  <div id="checkoutBillingAddress" class="large-6 columns">
+  </div>
+  <div id="checkoutShippingAddress" class="large-6 columns"></div>
+</div>
+<!--shipping-payment-->
+<div class="row">
+  <div id="checkoutShippingMethod" class="large-6 columns"></div>
+  <div id="checkoutBillingMethod" class="large-6 columns"></div>
+</div>
+
+<!--order items-->
+<div class="row">
+  <div id="checkoutItems" class="large-12 columns">
+    <table class="large-12">
+      <thead>
+      <tr>
+        <td><b>Item</b></td>
+        <td><b>Quantity</b></td>
+        <td><b>Price</b></td>
+      </tr>
+      </thead>
+      <tfoot>
+      <tr>
+        <td><b>Total</b></td>
+        <td><b>{{quote.items_qty}}</b></td>
+        <td><b>{{quote.grand_total}}</b></td>
+      </tr>
+      </tfoot>
+
+      <tbody>
+      <!-- quote items -->
+      <tr ng-repeat="item in quoteItems">
+        <td>{{item.name}}</td>
+        <td>{{item.qty}}</td>
+        <td>{{item.final_price_with_tax * item.qty | currency}}</td>
+      </tr>
+      </tbody>
+    </table>
+  </div>
+</div>

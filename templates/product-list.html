@@ -8,7 +8,11 @@
       </li>
       <li class="price">${{product.final_price_with_tax}}</li>
       <li class="description">{{product.short_description}}</li>
-      <li class="cta-button"><a class="button" href="#">Buy Now</a></li>
+      <li class="cta-button">
+        <a class="button" href="" ng-click="cart.addItem(product.entity_id, product.name, product.final_price_with_tax ,1)">
+          Buy Now
+        </a>
+      </li>
     </ul>
   </li>
 </ul>

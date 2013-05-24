@@ -1,3 +1,7 @@
+@import "foundation_icons_general_enclosed/general_enclosed_foundicons";
+@import "foundation/app";
+
+
 ul.pricing-table{
   li.title{
     min-height: 80px;
@@ -10,4 +14,11 @@ ul.pricing-table{
 
 #login_form{
   min-height: 300px;
+}
+
+
+td.remove{
+  i[class*="foundicon-"]{
+    line-height: 1.2;
+  }
 }

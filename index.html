@@ -10,16 +10,20 @@
   <script src="js/vendor/angular/angular.js"></script>
   <script src="js/vendor/angular/angular-resource.js"></script>
   <script src="js/vendor/angular/angular-cookies.js"></script>
-  <script src="js/app.js"></script>
-  <script src="js/controllers.js"></script>
-  <!--<script src="js/filters.js"></script>-->
-  <script src="js/services.js"></script>
 
   <script src="js/vendor/custom.modernizr.js"></script>
   <script src="js/vendor/OAuthSimple.js"></script>
+  <script src="js/vendor/localStorageModule.js"></script>
 
-  <link rel="stylesheet" href="css/foundation/app.css"/>
-  <link rel="stylesheet" href="css/foundation/normalize.css"/>
+  <script src="js/models/cart.js"></script>
+  <script src="js/controllers.js"></script>
+  <!--<script src="js/filters.js"></script>-->
+  <script src="js/services.js"></script>
+  <script src="js/directives.js"></script>
+  <script src="js/app.js"></script>
+
+
+  <link rel="stylesheet" href="css/app.css"/>
 </head>
 <body>
 <div class="row">
@@ -76,10 +80,9 @@
           <h5 class="subheader">Risus ligula, aliquam nec fermentum vitae, sollicitudin eget urna. Donec dignissim nibh fermentum odio ornare sagittis.
           </h5>
         </div>
-
-        <a href="#">
-          <div class="panel callout radius">
-            <h6>99&nbsp; items in your cart</h6>
+        <a href="#/cart">
+          <div class="panel callout radius" ng-controller="CartCtrl">
+            <h6>{{cart.getTotalCount()}}&nbsp; items in your cart</h6>
           </div>
         </a>
 

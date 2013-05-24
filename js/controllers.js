@@ -39,8 +39,10 @@ function CategoryCtrl($scope, TopCategory, Category) {
   };
 }
 
-function ProductListCtrl($scope, $routeParams, Product) {
+function ProductListCtrl($scope, $routeParams, Product, Cart) {
   $scope.products = Product.query({categoryId: $routeParams.categoryId});
+
+  $scope.cart = Cart;
 }
 
 //PhoneListCtrl.$inject = ['$scope', 'Phone'];
@@ -108,7 +110,7 @@ function AuthCtrl($scope, $http, $routeParams, $cookieStore) {
         Authorization: oAuthInit.header
       }
     }).
-      success(function (data, status) {
+      success(function (data) {
         //authorize step
         var authData = oAuth._parseParameterString(data);
 
@@ -136,7 +138,7 @@ function AuthCtrl($scope, $http, $routeParams, $cookieStore) {
             Authorization: oAuthAuth.header
           }
         }).
-          success(function (data, status) {
+          success(function (data) {
             //Access step
             $scope.loginForm = data;
 
@@ -146,7 +148,7 @@ function AuthCtrl($scope, $http, $routeParams, $cookieStore) {
             if (authForm.length !== 0) {
               window.location = (authForm.attr('action') + "?oauth_token=" + authForm.find('input[name="oauth_token"]').val());
             } else {
-              var loginForm = jQuery(data).find('#loginForm')
+              var loginForm = jQuery(data).find('#loginForm');
               if (loginForm.length !== 0) {
                 alert('TODO - implement authentication');
               } else {
@@ -197,7 +199,7 @@ function AuthCtrl($scope, $http, $routeParams, $cookieStore) {
         Authorization: oAuthAccess.header
       }
     }).
-      success(function (data, status) {
+      success(function (data) {
         //Get access tokens
         var accessData = oAuth._parseParameterString(data);
 
@@ -217,7 +219,7 @@ function AuthCtrl($scope, $http, $routeParams, $cookieStore) {
   };
 
   $scope.getInfo = function(){
-    var infoUrl = '../api/rest/customers/1';
+    var infoUrl = '../api/rest/single/quote';
     var oAuth = OAuthSimple($scope.consumerKey, $scope.consumerSecret);
     $scope.token = $cookieStore.get('token');
     $scope.tokenSecret = $cookieStore.get('tokenSecret');
@@ -243,7 +245,7 @@ function AuthCtrl($scope, $http, $routeParams, $cookieStore) {
         Authorization: oAuthAccess.header
       }
     }).
-      success(function (data, status) {
+      success(function (data) {
         console.log(data);
         //Get access tokens
 //        var accessData = oAuth._parseParameterString(data);
@@ -258,5 +260,18 @@ function AuthCtrl($scope, $http, $routeParams, $cookieStore) {
       });
   }
 
+
+}
+
+function CartCtrl($scope, Cart) {
+  $scope.cart = Cart;
+}
+
+
+function CheckoutCtrl($scope, Cart, Quote) {
+  $scope.cart = Cart;
+
+  $scope.quote = Quote.query({});
+  $scope.quoteItems = Quote.items({});
 
 }

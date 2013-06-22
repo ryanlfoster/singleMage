@@ -38,4 +38,14 @@ app
         });
       }
     };
+  })
+  .directive('ngGo', function () {
+    return{
+      restrict: "A",
+      controller: function ($scope, $element, $attrs) {
+        $element.click(function () {
+            window.location=$attrs.ngGo;
+  });
+      }
+    };
   });

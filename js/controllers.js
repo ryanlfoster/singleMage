@@ -219,7 +219,7 @@ function AuthCtrl($scope, $http, $routeParams, $cookieStore) {
   };
 
   $scope.getInfo = function(){
-    var infoUrl = '../api/rest/single/quote';
+    var infoUrl = '../api/rest/single/quote/store/1';
     var oAuth = OAuthSimple($scope.consumerKey, $scope.consumerSecret);
     $scope.token = $cookieStore.get('token');
     $scope.tokenSecret = $cookieStore.get('tokenSecret');
@@ -272,6 +272,9 @@ function CheckoutCtrl($scope, Cart, Quote) {
   $scope.cart = Cart;
 
   $scope.quote = Quote.query({});
-  $scope.quoteItems = Quote.items({});
+  $scope.sameShippingAddress = true;
 
+  $scope.placeOrder = function(){
+
+  };
 }

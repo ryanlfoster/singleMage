@@ -1,42 +1,235 @@
 <!--address-->
+<form class="order" ng-submit="placeOrder()">
 <div class="row">
-  <div id="checkoutBillingAddress" class="large-6 columns">
-  </div>
-  <div id="checkoutShippingAddress" class="large-6 columns"></div>
+    <div id="checkoutBillingAddress" class="large-12 columns">
+        <fieldset>
+            <legend>Billing address</legend>
+            <div class="row">
+                <div class="small-2 columns">
+                    <label for="b-first-name" class="right inline">First name</label>
+                </div>
+                <div class="small-4 columns">
+                    <input type="text" id="b-first-name" placeholder="First name">
+                </div>
+                <div class="small-2 columns">
+                    <label for="b-last-name" class="right inline">Last name</label>
+                </div>
+                <div class="small-4 columns">
+                    <input type="text" id="b-last-name" placeholder="Last name">
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="small-2 columns">
+                    <label for="b-company" class="right inline">Company</label>
+                </div>
+                <div class="small-4 columns left">
+                    <input type="text" id="b-company" placeholder="Company">
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="small-2 columns">
+                    <label for="b-address" class="right inline">Address</label>
+                </div>
+                <div class="small-10 columns left">
+                    <input type="text" id="b-address" placeholder="Address">
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="small-2 columns">
+                    <label for="b-city" class="right inline">City</label>
+                </div>
+                <div class="small-4 columns">
+                    <input type="text" id="b-city" placeholder="City">
+                </div>
+                <div class="small-2 columns">
+                    <label for="b-state" class="right inline">State/Province</label>
+                </div>
+                <div class="small-4 columns">
+                    <input type="text" id="b-state" placeholder="State/Province">
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="small-2 columns">
+                    <label for="b-zip" class="right inline">Zip/Postal Code</label>
+                </div>
+                <div class="small-4 columns">
+                    <input type="text" id="b-zip" placeholder="Zip/Postal Code">
+                </div>
+                <div class="small-2 columns">
+                    <label for="b-country" class="right inline">Country</label>
+                </div>
+                <div class="small-4 columns">
+                    <input type="text" id="b-country" placeholder="Country">
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="small-2 columns">
+                    <label for="b-telephone" class="right inline">Telephone</label>
+                </div>
+                <div class="small-4 columns">
+                    <input type="text" id="b-telephone" placeholder="Telephone">
+                </div>
+                <div class="small-2 columns">
+                    <label for="b-fax" class="right inline">Fax</label>
+                </div>
+                <div class="small-4 columns">
+                    <input type="text" id="b-fax" placeholder="Fax">
+                </div>
+            </div>
+        </fieldset>
+    </div>
 </div>
-<!--shipping-payment-->
+
 <div class="row">
-  <div id="checkoutShippingMethod" class="large-6 columns"></div>
-  <div id="checkoutBillingMethod" class="large-6 columns"></div>
+    <div id="checkoutShippingAddress" class="large-12 columns">
+        <fieldset>
+            <legend>Shipping address</legend>
+
+            <div class="row">
+                <div class="small-3 columns">
+                    <label for="sameShippingAddress" class="right inline">
+                        <input type="checkbox" id="sameShippingAddress" ng-model="sameShippingAddress">Same, as billing
+                    </label>
+                </div>
+            </div>
+
+
+            <div ng-show="!sameShippingAddress">
+                <div class="row">
+                    <div class="small-2 columns">
+                        <label for="sh-first-name" class="right inline">First name</label>
+                    </div>
+                    <div class="small-4 columns">
+                        <input type="text" id="sh-first-name" placeholder="First name">
+                    </div>
+                    <div class="small-2 columns">
+                        <label for="sh-last-name" class="right inline">Last name</label>
+                    </div>
+                    <div class="small-4 columns">
+                        <input type="text" id="sh-last-name" placeholder="Last name">
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="small-2 columns">
+                        <label for="sh-company" class="right inline">Company</label>
+                    </div>
+                    <div class="small-4 columns left">
+                        <input type="text" id="sh-company" placeholder="Company">
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="small-2 columns">
+                        <label for="sh-address" class="right inline">Address</label>
+                    </div>
+                    <div class="small-10 columns left">
+                        <input type="text" id="sh-address" placeholder="Address">
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="small-2 columns">
+                        <label for="sh-city" class="right inline">City</label>
+                    </div>
+                    <div class="small-4 columns">
+                        <input type="text" id="sh-city" placeholder="City">
+                    </div>
+                    <div class="small-2 columns">
+                        <label for="sh-state" class="right inline">State/Province</label>
+                    </div>
+                    <div class="small-4 columns">
+                        <input type="text" id="sh-state" placeholder="State/Province">
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="small-2 columns">
+                        <label for="sh-zip" class="right inline">Zip/Postal Code</label>
+                    </div>
+                    <div class="small-4 columns">
+                        <input type="text" id="sh-zip" placeholder="Zip/Postal Code">
+                    </div>
+                    <div class="small-2 columns">
+                        <label for="sh-country" class="right inline">Country</label>
+                    </div>
+                    <div class="small-4 columns">
+                        <input type="text" id="sh-country" placeholder="Country">
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="small-2 columns">
+                        <label for="sh-telephone" class="right inline">Telephone</label>
+                    </div>
+                    <div class="small-4 columns">
+                        <input type="text" id="sh-telephone" placeholder="Telephone">
+                    </div>
+                    <div class="small-2 columns">
+                        <label for="sh-fax" class="right inline">Fax</label>
+                    </div>
+                    <div class="small-4 columns">
+                        <input type="text" id="sh-fax" placeholder="Fax">
+                    </div>
+                </div>
+            </div>
+        </fieldset>
+    </div>
+</div>
+
+<div class="row">
+    <div class="large-6 columns">
+        <fieldset>
+            <legend>Shipping methods</legend>
+            <label ng-repeat="shippingMethod in quote.shippingMethods">
+                <input type="radio" name="shipping-method" value="{{shippingMethod.title}}" required>{{shippingMethod.title}}
+            </label>
+        </fieldset>
+    </div>
+    <div class="large-6 columns">
+        <fieldset>
+            <legend>Billing methods</legend>
+            <label ng-repeat="paymentMethod in quote.paymentMethods">
+                <input type="radio" name="billing-method" value="{{paymentMethod.code}}" required>{{paymentMethod.title}}
+            </label>
+        </fieldset>
+    </div>
 </div>
 
 <!--order items-->
 <div class="row">
-  <div id="checkoutItems" class="large-12 columns">
-    <table class="large-12">
-      <thead>
-      <tr>
-        <td><b>Item</b></td>
-        <td><b>Quantity</b></td>
-        <td><b>Price</b></td>
-      </tr>
-      </thead>
-      <tfoot>
-      <tr>
-        <td><b>Total</b></td>
-        <td><b>{{quote.items_qty}}</b></td>
-        <td><b>{{quote.grand_total}}</b></td>
-      </tr>
-      </tfoot>
+    <div id="checkoutItems" class="large-12 columns">
+        <table class="large-12">
+            <thead>
+            <tr>
+                <td><b>Item</b></td>
+                <td><b>Quantity</b></td>
+                <td><b>Price</b></td>
+            </tr>
+            </thead>
+            <tfoot>
+            <tr>
+                <td><b>Total</b></td>
+                <td><b>{{quote.items_qty}}</b></td>
+                <td><b>{{quote.grand_total}}</b></td>
+            </tr>
+            </tfoot>
 
-      <tbody>
-      <!-- quote items -->
-      <tr ng-repeat="item in quoteItems">
-        <td>{{item.name}}</td>
-        <td>{{item.qty}}</td>
-        <td>{{item.final_price_with_tax * item.qty | currency}}</td>
-      </tr>
-      </tbody>
-    </table>
-  </div>
+            <tbody>
+            <!-- quote items -->
+            <tr ng-repeat="item in quote.items">
+                <td>{{item.name}}</td>
+                <td>{{item.qty}}</td>
+                <td>{{item.final_price_with_tax * item.qty | currency}}</td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
 </div>
+<button type="submit" class="button">Place order</button>
+</form>

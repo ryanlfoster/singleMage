@@ -218,8 +218,8 @@ function AuthCtrl($scope, $http, $routeParams, $cookieStore) {
       });
   };
 
-  $scope.getInfo = function(){
-    var infoUrl = '../api/rest/single/quote/store/1';
+  $scope.getInfo = function () {
+    var infoUrl = '../api/rest/single/order';
     var oAuth = OAuthSimple($scope.consumerKey, $scope.consumerSecret);
     $scope.token = $cookieStore.get('token');
     $scope.tokenSecret = $cookieStore.get('tokenSecret');
@@ -240,7 +240,7 @@ function AuthCtrl($scope, $http, $routeParams, $cookieStore) {
 
     $http({
       url: infoUrl,
-      method: 'GET',
+      method: 'POST',
       headers: {
         Authorization: oAuthAccess.header
       }
@@ -249,7 +249,6 @@ function AuthCtrl($scope, $http, $routeParams, $cookieStore) {
         console.log(data);
         //Get access tokens
 //        var accessData = oAuth._parseParameterString(data);
-
 
 
       }).
@@ -268,13 +267,48 @@ function CartCtrl($scope, Cart) {
 }
 
 
-function CheckoutCtrl($scope, Cart, Quote) {
+function CheckoutCtrl($scope, Cart, Quote, Order, $route, $window, $location) {
+  //TODO First we should create quote
   $scope.cart = Cart;
+  //TODO change cart items on quote items
+  $scope.orderData = {is_default_shipping: true, items: Cart.items};
 
   $scope.quote = Quote.query({});
   $scope.sameShippingAddress = true;
 
-  $scope.placeOrder = function(){
-
+  $scope.placeOrder = function () {
+    var order = new Order($scope.orderData);
+    order.$save(function (userObj, putResponseHeaders) {
+      var responseHeaders = putResponseHeaders();
+      var newOrderId = parseInt(responseHeaders.location);
+      if (newOrderId) {
+        alert('Order placed - new order id: ' + newOrderId);
+        Cart.clearItems();
+        $location.path('/order/success/' + newOrderId);
+      } else {
+        alert('Something went wrong - please, connect to site admin');
+      }
+    }, function (data, v) {
+      var errorMsg = '';
+      try {
+        errorMsg = data.data.messages.error[0].message;
+      } catch (e) {
+        console.log('Cannot parse error msg: ' + e);
+      }
+      alert('Cannot place order, error: ' + errorMsg);
+      console.log(v);
+    });
+//    Order.create({order: $scope.orderForm});
   };
+
+  //init section
+  if (!$scope.cart.items.length) {
+    alert('Cart is empty');
+    if ($route.previousUrl !== $route.currentUrl) {
+      $window.location = $route.previousUrl;
+    } else {
+      $window.location = '#';
+//      $location.path("/");
+    }
+  }
 }

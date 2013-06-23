@@ -18,4 +18,12 @@ angular.module('mageShop', ['mageShopServices', 'mageShopDirectives', 'ngCookies
       //controller didn't initiate without template
       when('/login/oauth_token', {templateUrl: 'templates/oauth-token.html', controller: AuthCtrl}).
       otherwise({redirectTo: '/products'});
-  }]);
+  }]).
+  run(function($rootScope, $route){
+    //Bind the `$routeChangeSuccess` event on the rootScope, so that we dont need to
+    //bind in induvidual controllers.
+    $rootScope.$on('$locationChangeSuccess', function(event, currentUrl, previousUrl) {
+      $route.previousUrl = previousUrl;
+      $route.currentUrl = currentUrl;
+    })
+  })

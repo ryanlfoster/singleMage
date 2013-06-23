@@ -1,84 +1,84 @@
 <!--address-->
-<form class="order" ng-submit="placeOrder()">
+<form name="orderForm" class="order" ng-submit="placeOrder()">
 <div class="row">
     <div id="checkoutBillingAddress" class="large-12 columns">
         <fieldset>
             <legend>Billing address</legend>
             <div class="row">
                 <div class="small-2 columns">
-                    <label for="b-first-name" class="right inline">First name</label>
+                    <label for="firstname" class="right inline">First name</label>
                 </div>
                 <div class="small-4 columns">
-                    <input type="text" id="b-first-name" placeholder="First name">
+                    <input type="text" id="firstname" ng-model="orderData.firstname" name="firstname" placeholder="First name" required>
                 </div>
                 <div class="small-2 columns">
-                    <label for="b-last-name" class="right inline">Last name</label>
+                    <label for="lastname" class="right inline">Last name</label>
                 </div>
                 <div class="small-4 columns">
-                    <input type="text" id="b-last-name" placeholder="Last name">
+                    <input type="text" id="lastname" ng-model="orderData.lastname" name="lastname" placeholder="Last name" required>
                 </div>
             </div>
 
             <div class="row">
                 <div class="small-2 columns">
-                    <label for="b-company" class="right inline">Company</label>
+                    <label for="company" class="right inline">Company</label>
                 </div>
                 <div class="small-4 columns left">
-                    <input type="text" id="b-company" placeholder="Company">
+                    <input type="text" id="company" ng-model="orderData.company" name="company" placeholder="Company">
                 </div>
             </div>
 
             <div class="row">
                 <div class="small-2 columns">
-                    <label for="b-address" class="right inline">Address</label>
+                    <label for="street" class="right inline">Address</label>
                 </div>
                 <div class="small-10 columns left">
-                    <input type="text" id="b-address" placeholder="Address">
+                    <input type="text" id="street" ng-model="orderData.street" name="street" placeholder="street" required>
                 </div>
             </div>
 
             <div class="row">
                 <div class="small-2 columns">
-                    <label for="b-city" class="right inline">City</label>
+                    <label for="city" class="right inline">City</label>
                 </div>
                 <div class="small-4 columns">
-                    <input type="text" id="b-city" placeholder="City">
+                    <input type="text" id="city" ng-model="orderData.city" name="city" placeholder="City">
                 </div>
                 <div class="small-2 columns">
-                    <label for="b-state" class="right inline">State/Province</label>
+                    <label for="state" class="right inline">State/Province</label>
                 </div>
                 <div class="small-4 columns">
-                    <input type="text" id="b-state" placeholder="State/Province">
+                    <input type="text" id="state" ng-model="orderData.state" name="state" placeholder="State/Province">
                 </div>
             </div>
 
             <div class="row">
                 <div class="small-2 columns">
-                    <label for="b-zip" class="right inline">Zip/Postal Code</label>
+                    <label for="zip" class="right inline">Zip/Postal Code</label>
                 </div>
                 <div class="small-4 columns">
-                    <input type="text" id="b-zip" placeholder="Zip/Postal Code">
+                    <input type="text" id="zip" ng-model="orderData.zip" name="zip" placeholder="Zip/Postal Code">
                 </div>
                 <div class="small-2 columns">
-                    <label for="b-country" class="right inline">Country</label>
+                    <label for="country" class="right inline">Country</label>
                 </div>
                 <div class="small-4 columns">
-                    <input type="text" id="b-country" placeholder="Country">
+                    <input type="text" id="country" ng-model="orderData.country" name="country" placeholder="Country">
                 </div>
             </div>
 
             <div class="row">
                 <div class="small-2 columns">
-                    <label for="b-telephone" class="right inline">Telephone</label>
+                    <label for="telephone" class="right inline">Telephone</label>
                 </div>
                 <div class="small-4 columns">
-                    <input type="text" id="b-telephone" placeholder="Telephone">
+                    <input type="text" id="telephone" ng-model="orderData.telephone" name="telephone" placeholder="Telephone">
                 </div>
                 <div class="small-2 columns">
-                    <label for="b-fax" class="right inline">Fax</label>
+                    <label for="fax" class="right inline">Fax</label>
                 </div>
                 <div class="small-4 columns">
-                    <input type="text" id="b-fax" placeholder="Fax">
+                    <input type="text" id="fax" ng-model="orderData.fax" name="fax" placeholder="Fax">
                 </div>
             </div>
         </fieldset>
@@ -93,88 +93,89 @@
             <div class="row">
                 <div class="small-3 columns">
                     <label for="sameShippingAddress" class="right inline">
-                        <input type="checkbox" id="sameShippingAddress" ng-model="sameShippingAddress">Same, as billing
+                        <input type="checkbox" id="sameShippingAddress" ng-model="orderData.is_default_shipping" name="sameShippingAddress"
+                               ng-model="orderData.sameShippingAddress">Same, as billing
                     </label>
                 </div>
             </div>
 
 
-            <div ng-show="!sameShippingAddress">
+            <div ng-show="!orderData.is_default_shipping">
                 <div class="row">
                     <div class="small-2 columns">
-                        <label for="sh-first-name" class="right inline">First name</label>
+                        <label for="additional_firstname" class="right inline">First name</label>
                     </div>
                     <div class="small-4 columns">
-                        <input type="text" id="sh-first-name" placeholder="First name">
+                        <input type="text" id="additional_firstname" ng-model="orderData.additional_firstname" name="additional_firstname" placeholder="First name">
                     </div>
                     <div class="small-2 columns">
-                        <label for="sh-last-name" class="right inline">Last name</label>
+                        <label for="additional_lastname" class="right inline">Last name</label>
                     </div>
                     <div class="small-4 columns">
-                        <input type="text" id="sh-last-name" placeholder="Last name">
+                        <input type="text" id="additional_lastname" ng-model="orderData.additional_lastname" name="additional_lastname" placeholder="Last name">
                     </div>
                 </div>
 
                 <div class="row">
                     <div class="small-2 columns">
-                        <label for="sh-company" class="right inline">Company</label>
+                        <label for="additional_company" class="right inline">Company</label>
                     </div>
                     <div class="small-4 columns left">
-                        <input type="text" id="sh-company" placeholder="Company">
+                        <input type="text" id="additional_company" ng-model="orderData.additional_company" name="additional_company" placeholder="Company">
                     </div>
                 </div>
 
                 <div class="row">
                     <div class="small-2 columns">
-                        <label for="sh-address" class="right inline">Address</label>
+                        <label for="additional_address" class="right inline">Address</label>
                     </div>
                     <div class="small-10 columns left">
-                        <input type="text" id="sh-address" placeholder="Address">
+                        <input type="text" id="additional_address" ng-model="orderData.additional_address" name="additional_address" placeholder="street">
                     </div>
                 </div>
 
                 <div class="row">
                     <div class="small-2 columns">
-                        <label for="sh-city" class="right inline">City</label>
+                        <label for="additional_city" class="right inline">City</label>
                     </div>
                     <div class="small-4 columns">
-                        <input type="text" id="sh-city" placeholder="City">
+                        <input type="text" id="additional_city" ng-model="orderData.additional_city" name="additional_city" placeholder="City">
                     </div>
                     <div class="small-2 columns">
-                        <label for="sh-state" class="right inline">State/Province</label>
+                        <label for="additional_state" class="right inline">State/Province</label>
                     </div>
                     <div class="small-4 columns">
-                        <input type="text" id="sh-state" placeholder="State/Province">
+                        <input type="text" id="additional_state" ng-model="orderData.additional_state" name="additional_state" placeholder="State/Province">
                     </div>
                 </div>
 
                 <div class="row">
                     <div class="small-2 columns">
-                        <label for="sh-zip" class="right inline">Zip/Postal Code</label>
+                        <label for="additional_zip" class="right inline">Zip/Postal Code</label>
                     </div>
                     <div class="small-4 columns">
-                        <input type="text" id="sh-zip" placeholder="Zip/Postal Code">
+                        <input type="text" id="additional_zip" ng-model="orderData.additional_zip" name="additional_zip" placeholder="Zip/Postal Code">
                     </div>
                     <div class="small-2 columns">
-                        <label for="sh-country" class="right inline">Country</label>
+                        <label for="additional_country" class="right inline">Country</label>
                     </div>
                     <div class="small-4 columns">
-                        <input type="text" id="sh-country" placeholder="Country">
+                        <input type="text" id="additional_country" ng-model="orderData.additional_country" name="additional_country" placeholder="Country">
                     </div>
                 </div>
 
                 <div class="row">
                     <div class="small-2 columns">
-                        <label for="sh-telephone" class="right inline">Telephone</label>
+                        <label for="additional_telephone" class="right inline">Telephone</label>
                     </div>
                     <div class="small-4 columns">
-                        <input type="text" id="sh-telephone" placeholder="Telephone">
+                        <input type="text" id="additional_telephone" ng-model="orderData.additional_telephone" name="additional_telephone" placeholder="Telephone">
                     </div>
                     <div class="small-2 columns">
-                        <label for="sh-fax" class="right inline">Fax</label>
+                        <label for="additional_fax" class="right inline">Fax</label>
                     </div>
                     <div class="small-4 columns">
-                        <input type="text" id="sh-fax" placeholder="Fax">
+                        <input type="text" id="additional_fax" ng-model="orderData.additional_fax" name="additional_fax" placeholder="Fax">
                     </div>
                 </div>
             </div>
@@ -187,7 +188,7 @@
         <fieldset>
             <legend>Shipping methods</legend>
             <label ng-repeat="shippingMethod in quote.shippingMethods">
-                <input type="radio" name="shipping-method" value="{{shippingMethod.title}}" required>{{shippingMethod.title}}
+                <input type="radio" name="shipping_method" ng-model="orderData.shipping_method" value="{{shippingMethod.title}}" required>{{shippingMethod.title}}
             </label>
         </fieldset>
     </div>
@@ -195,7 +196,7 @@
         <fieldset>
             <legend>Billing methods</legend>
             <label ng-repeat="paymentMethod in quote.paymentMethods">
-                <input type="radio" name="billing-method" value="{{paymentMethod.code}}" required>{{paymentMethod.title}}
+                <input type="radio" name="billing_method" ng-model="orderData.billing_method"value="{{paymentMethod.code}}" required>{{paymentMethod.title}}
             </label>
         </fieldset>
     </div>
@@ -222,10 +223,16 @@
 
             <tbody>
             <!-- quote items -->
-            <tr ng-repeat="item in quote.items">
+            <!--TODO uncomment when quotes will work-->
+            <!--<tr ng-repeat="item in quote.items">-->
+                <!--<td>{{item.name}}</td>-->
+                <!--<td>{{item.qty}}</td>-->
+                <!--<td>{{item.final_price_with_tax * item.qty | currency}}</td>-->
+            <!--</tr>-->
+            <tr ng-repeat="item in cart.items">
                 <td>{{item.name}}</td>
-                <td>{{item.qty}}</td>
-                <td>{{item.final_price_with_tax * item.qty | currency}}</td>
+                <td>{{item.quantity}}</td>
+                <td>{{item.price * item.quantity | currency}}</td>
             </tr>
             </tbody>
         </table>

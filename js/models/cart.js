@@ -39,8 +39,8 @@ Cart.prototype.loadItems = function () {
       var items = JSON.parse(data);
       for (var i = 0; i < items.length; i++) {
         var item = items[i];
-        if (item.sku != null && item.name != null && item.price != null && item.quantity != null) {
-          item = new CartItem(item.sku, item.name, item.price, item.quantity);
+        if (item.id != null && item.name != null && item.price != null && item.quantity != null) {
+          item = new CartItem(item.id, item.name, item.price, item.quantity);
           this.items.push(item);
         }
       }
@@ -65,7 +65,7 @@ Cart.prototype.addItem = function (id, name, price, quantity) {
     var found = false;
     for (var i = 0; i < this.items.length && !found; i++) {
       var item = this.items[i];
-      if (item.sku == id) {
+      if (item.id == id) {
         found = true;
         item.quantity = this.toNumber(item.quantity + quantity);
         if (item.quantity <= 0) {
@@ -86,11 +86,11 @@ Cart.prototype.addItem = function (id, name, price, quantity) {
 };
 
 // get the total price for all items currently in the cart
-Cart.prototype.getTotalPrice = function (sku) {
+Cart.prototype.getTotalPrice = function (id) {
   var total = 0;
   for (var i = 0; i < this.items.length; i++) {
     var item = this.items[i];
-    if (sku == null || item.sku == sku) {
+    if (id == null || item.id == id) {
       total += this.toNumber(item.quantity * item.price);
     }
   }
@@ -177,8 +177,8 @@ function CheckoutParameters(serviceName, merchantID, options) {
 //----------------------------------------------------------------
 // items in the cart
 //
-function CartItem(sku, name, price, quantity) {
-  this.sku = sku;
+function CartItem(id, name, price, quantity) {
+  this.id = id;
   this.name = name;
   this.price = price * 1;
   this.quantity = quantity * 1;

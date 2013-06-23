@@ -39,20 +39,20 @@
                     <button
                             class="button prefix " type="button"
                             ng-disabled="item.quantity >= 1000"
-                            ng-click="cart.addItem(item.sku, item.name, item.price, +1)">+</button>
+                            ng-click="cart.addItem(item.id, item.name, item.price, +1)">+</button>
                 </div>
                 <div class="small-2 columns">
                     <button
                             class="button prefix " type="button"
                             ng-disabled="item.quantity <= 1"
-                            ng-click="cart.addItem(item.sku, item.name, item.price, -1)">-</button>
+                            ng-click="cart.addItem(item.id, item.name, item.price, -1)">-</button>
                 </div>
                 <div class="columns"></div>
             </div>
         </td>
         <td>{{item.price * item.quantity | currency}}</td>
         <td class="remove" title="remove from cart">
-            <a href="" ng-click="cart.addItem(item.sku, item.name, item.price, -10000000)" >
+            <a href="" ng-click="cart.addItem(item.id, item.name, item.price, -10000000)" >
                 <i class="foundicon-remove"></i>
             </a>
         </td>

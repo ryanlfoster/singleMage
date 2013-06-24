@@ -48,13 +48,24 @@ function ProductListCtrl($scope, $routeParams, Product, Cart) {
 //PhoneListCtrl.$inject = ['$scope', 'Phone'];
 
 
-function ProductDetailCtrl($scope, $routeParams, Product, ProductImages) {
+function ProductDetailCtrl($scope, $routeParams, Product, ProductImages, Cart) {
+  $scope.cart = Cart;
   $scope.product = Product.get({productId: $routeParams.productId});
 
   $scope.productImages = ProductImages.query({productId: $routeParams.productId});
 
+  $scope.qty = 1;
+
+  $scope.$watch('qty', function() {
+    $scope.qty = ($scope.qty > 0) ? $scope.qty : 1;
+  });
+
   $scope.setImage = function (imageUrl) {
     $scope.product.image_url = imageUrl;
+  };
+
+  $scope.addToCart = function () {
+    $scope.cart.addItem($scope.product.entity_id, $scope.product.name, $scope.product.final_price_with_tax, $scope.qty);
   };
 
 }
@@ -72,12 +83,10 @@ function AuthCtrl($scope, $http, $routeParams, $cookieStore) {
   $scope.tokenSecret = null;
   $scope.signatureMethod = 'PLAINTEXT';
 
-
   $scope.initUrl = '../oauth/initiate';
   $scope.initAction = 'POST';
   $scope.initToken = null;
   $scope.initTokenSecret = null;
-
 
   $scope.authUrl = '../oauth/authorize/simple';
   $scope.authAction = 'GET';
@@ -89,7 +98,6 @@ function AuthCtrl($scope, $http, $routeParams, $cookieStore) {
   $scope.isLogged = false;
 
   $scope.init = function () {
-
     var oAuth = OAuthSimple($scope.consumerKey, $scope.consumerSecret);
     var oAuthInit = oAuth.sign({
       action: $scope.initAction,
@@ -100,7 +108,6 @@ function AuthCtrl($scope, $http, $routeParams, $cookieStore) {
         oauth_method: $scope.signatureMethod
       }
     });
-
 
     //init step
     $http({

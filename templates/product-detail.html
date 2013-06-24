@@ -14,10 +14,24 @@
         </li>
       </ul>
     </div>
-    <div class="large-offset-2"></div>
+    <div class="row">
+      <div class="large-6 columns">
+        <div class="row collapse">
+          <div class="small-2 columns">
+            <input type="number" ng-model="qty">
+          </div>
+          <div class="small-4 columns left">
+            <a href="" class="button prefix"
+               ng-click="addToCart()">Add to cart</a>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
   <h6>{{product.short_description}}</h6>
+
   <p ng-bind-html-unsafe="product.description"></p>
+
   <p class="small-11 small-centered columns" ng-bind-html-unsafe="product.in_depth"></p>
 
 </article>

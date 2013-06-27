@@ -92,4 +92,7 @@ mageShopModule
         headers:{'Authorization': oAuthSign.header}
       }
     });
-  });
+  })
+  .service('Auth', function () {
+
+  })

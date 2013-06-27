@@ -1,12 +1,13 @@
-<form>
+<h4>Login</h4>
+<form name="loginForm" id="loginForm" ng-submit="login()">
   <div class="row">
-    <div class="small-8">
+    <div class="small-10">
       <div class="row">
         <div class="small-3 columns">
           <label for="email" class="right inline">E-Mail</label>
         </div>
         <div class="small-9 columns">
-          <input type="email" id="email" placeholder="Inline Text Input" ng-model="email">
+          <input type="email" id="email" placeholder="E-Mail" ng-model="loginData.email" required>
         </div>
       </div>
       <div class="row">
@@ -14,7 +15,20 @@
           <label for="password" class="right inline">Password</label>
         </div>
         <div class="small-9 columns">
-          <input type="password" id="password" placeholder="Inline Text Input" ng-model="password">
+          <input type="password" id="password" placeholder="Password" ng-model="loginData.password" required>
+        </div>
+      </div>
+      <div class="row">
+
+      </div>
+      <div class="row">
+        <div class="row">
+          <div class="small-3 columns">
+          </div>
+          <div class="small-9 columns">
+            <small class="error" ng-show="loginForm.$error.required">Value required!</small>
+            <button class="button" type="submit">Login</button>
+          </div>
         </div>
       </div>
     </div>

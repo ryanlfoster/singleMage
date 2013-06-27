@@ -35,64 +35,74 @@ mageShopModule
     var cart = new Cart(undefined, localStorageService);
     return cart;
   })
-  .factory('Quote', function ($resource, $cookieStore) {
-    //TODO into service!!!!!!!!!1
-    var consumerKey = 'i6zwhtf7jd7t9yql2jug5oerj4tyugd9';
-    var consumerSecret = '2bdtt65b2zyxrtmlgyt850jasd6t40f1';
-    var signatureMethod = 'PLAINTEXT';
-    var token = $cookieStore.get('token');
-    var tokenSecret = $cookieStore.get('tokenSecret');
-    var oAuth = OAuthSimple(consumerKey, consumerSecret);
-    var oAuthSign = oAuth.sign({
-      method: signatureMethod,
-      parameters: {
-        oauth_token: token,
-        oauth_method: signatureMethod
-      },
-      signatures: {
-        oauth_token_secret: tokenSecret
-      }
-    });
-
-
+  .factory('Quote', function ($resource, $cookieStore, User) {
     return $resource('../api/rest/single/quote/:action/store/1', {}, {
       items: {
         method: 'GET',
-        params: {'action':'items'},
-        headers:{'Authorization': oAuthSign.header},
+        params: {'action': 'items'},
+        headers: {'Authorization': User.getHeaders()},
         isArray: true
       },
-      query: {method: 'GET', cache: true, params: {},headers:{'Authorization': oAuthSign.header}}
+      query: {method: 'GET', cache: true, params: {}, headers: {'Authorization': User.getHeaders()}}
     });
   })
-  .factory('Order', function ($resource, $cookieStore) {
-    //TODO into service!!!!!!!!!1
-    var consumerKey = 'i6zwhtf7jd7t9yql2jug5oerj4tyugd9';
-    var consumerSecret = '2bdtt65b2zyxrtmlgyt850jasd6t40f1';
-    var signatureMethod = 'PLAINTEXT';
-    var token = $cookieStore.get('token');
-    var tokenSecret = $cookieStore.get('tokenSecret');
-    var oAuth = OAuthSimple(consumerKey, consumerSecret);
-    var oAuthSign = oAuth.sign({
-      method: signatureMethod,
-      parameters: {
-        oauth_token: token,
-        oauth_method: signatureMethod
-      },
-      signatures: {
-        oauth_token_secret: tokenSecret
-      }
-    });
-
-
-    return $resource('../api/rest/single/order', {}, {
-      create: {method: 'POST', cache: true, params: {},headers:{'Authorization': oAuthSign.header}},
-      save:{
+  .factory('Order', function ($resource, $cookieStore, User) {
+     return $resource('../api/rest/single/order', {}, {
+      create: {method: 'POST', cache: true, params: {}, headers: {'Authorization': User.getHeaders()}},
+      save: {
         method: 'POST',
-        headers:{'Authorization': oAuthSign.header}
+        headers: {'Authorization': User.getHeaders()}
       }
     });
   })
-  .service('Auth', function () {
+  .factory('Auth', function ($resource, User) {
+    var authUrl = '../api/rest/single/auth/store/1';
+    var authMethod = 'POST';
 
+
+    return $resource(authUrl, {}, {
+      login: {method: authMethod, cache: false, params: {}}
+    });
   })
+  .service('User', function ($resource, $location) {
+    var user = {
+      isLogged: false,
+      info: null,
+      config: {
+        callbackUrl: "http://magento-demo.local/singleMage/index.html#/login/oauth_token",
+        consumerKey: 'i6zwhtf7jd7t9yql2jug5oerj4tyugd9',
+        consumerSecret: '2bdtt65b2zyxrtmlgyt850jasd6t40f1',
+        signatureMethod: 'PLAINTEXT',
+        oauth_token: null,
+        oauth_token_secret: null,
+        oauth_consumer_key: null,
+        oauth_signature: null
+      },
+      getHeaders: function () {
+        if (!this.isLogged){
+          $location.path('/');
+          return;
+        }
+
+        return 'OAuth ' +
+          'oauth_signature_method="'+this.config.signatureMethod+'", ' +
+          'oauth_token="'+this.config.oauth_token+'", ' +
+          'oauth_consumer_key="'+this.config.oauth_consumer_key+'", ' +
+          'oauth_signature="'+this.config.consumerSecret+'&'+this.config.oauth_token_secret+'"';
+      },
+      customerInfo: function(){
+        if (!this.info){
+          var headers = this.getHeaders();
+          //switch on http
+          var resource =  $resource('../api/rest/customers/', {}, {
+            get: {method: 'GET', cache: true, params: {}, headers: {'Authorization': headers}}
+          });
+
+          this.info = resource.get();
+        }
+
+        return this.info;
+      }
+    };
+    return user;
+  });

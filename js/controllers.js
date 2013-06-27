@@ -56,7 +56,7 @@ function ProductDetailCtrl($scope, $routeParams, Product, ProductImages, Cart) {
 
   $scope.qty = 1;
 
-  $scope.$watch('qty', function() {
+  $scope.$watch('qty', function () {
     $scope.qty = ($scope.qty > 0) ? $scope.qty : 1;
   });
 
@@ -73,199 +73,48 @@ function ProductDetailCtrl($scope, $routeParams, Product, ProductImages, Cart) {
 //ProductDetailCtrl.$inject = ['$scope', '$routeParams', 'Product', 'ProductImages'];
 
 
-function AuthCtrl($scope, $http, $routeParams, $cookieStore) {
-  $scope.callbackUrl = "http://magento-demo.local/singleMage/index.html#/login/oauth_token";
-  $scope.consumerKey = 'i6zwhtf7jd7t9yql2jug5oerj4tyugd9';
-  $scope.consumerSecret = '2bdtt65b2zyxrtmlgyt850jasd6t40f1';
-  $scope.requestToken = null;
-  $scope.requestVerifier = null;
-  $scope.token = null;
-  $scope.tokenSecret = null;
-  $scope.signatureMethod = 'PLAINTEXT';
+function AuthCtrl($scope, $http, $routeParams, $cookieStore, Auth, User) {
+  $scope.user = User;
+  $scope.button = "";
+  $scope.template = "";
+  $scope.customerInformation = "";
+  $scope.loginData = {email: "bel-azar@ya.ru", password: "test1234"};
 
-  $scope.initUrl = '../oauth/initiate';
-  $scope.initAction = 'POST';
-  $scope.initToken = null;
-  $scope.initTokenSecret = null;
+  $scope.$watch('user', function () {
+    $scope.button = !$scope.user.isLogged ? 'Login' : 'Profile';
+    $scope.template = !$scope.user.isLogged ? 'templates/login.html' : 'templates/profile.html';
+  }, true);
 
-  $scope.authUrl = '../oauth/authorize/simple';
-  $scope.authAction = 'GET';
+  $scope.login = function () {
+    var auth = new Auth($scope.loginData);
+    auth.$login(function (data) {
+      $scope.user.config.oauth_token = data.oauth_token;
+      $scope.user.config.oauth_token_secret = data.oauth_token_secret;
+      $scope.user.config.oauth_consumer_key = data.oauth_consumer_key;
+      $scope.user.config.oauth_signature = data.oauth_signature;
+      $scope.user.isLogged = true;
 
-  $scope.accessUrl = '../oauth/token';
-  $scope.accessAction = 'POST';
+      //TODO fix this dirty hack
+      $('#login_form').css('left', '-9999px');
 
-  $scope.loginForm = '';
-  $scope.isLogged = false;
-
-  $scope.init = function () {
-    var oAuth = OAuthSimple($scope.consumerKey, $scope.consumerSecret);
-    var oAuthInit = oAuth.sign({
-      action: $scope.initAction,
-      path: $scope.initUrl,
-      method: $scope.signatureMethod,
-      parameters: {
-        oauth_callback: $scope.callbackUrl,
-        oauth_method: $scope.signatureMethod
+    }, function (data, v) {
+      var errorMsg = '';
+      try {
+        errorMsg = data.data.messages.error[0].message;
+      } catch (e) {
+        console.log('Cannot parse error msg: ' + e);
       }
+      alert('Cannot login, error: ' + errorMsg);
+      console.log(v);
     });
-
-    //init step
-    $http({
-      method: $scope.initAction,
-      url: $scope.initUrl,
-      headers: {
-        Authorization: oAuthInit.header
-      }
-    }).
-      success(function (data) {
-        //authorize step
-        var authData = oAuth._parseParameterString(data);
-
-        //set temp tokens
-        $scope.initToken = authData.oauth_token;
-        $scope.initTokenSecret = authData.oauth_token_secret;
-
-        //we need store secret for future window reload
-        $cookieStore.put('initTokenSecret', $scope.initTokenSecret);
-
-
-        var oAuthAuth = oAuth.sign({
-          action: $scope.authAction,
-          path: $scope.authUrl,
-          parameters: {
-            oauth_token: $scope.initToken,
-            oauth_token_secret: $scope.initTokenSecret
-          }
-        });
-
-        $http({
-          method: $scope.authAction,
-          url: oAuthAuth.signed_url,
-          headers: {
-            Authorization: oAuthAuth.header
-          }
-        }).
-          success(function (data) {
-            //Access step
-            $scope.loginForm = data;
-
-            //TODO fix form getter
-            var authForm = jQuery(data).find('#oauth_authorize_confirm');
-
-            if (authForm.length !== 0) {
-              window.location = (authForm.attr('action') + "?oauth_token=" + authForm.find('input[name="oauth_token"]').val());
-            } else {
-              var loginForm = jQuery(data).find('#loginForm');
-              if (loginForm.length !== 0) {
-                alert('TODO - implement authentication');
-              } else {
-                alert('TODO - implement smthing unknown');
-              }
-            }
-          }).
-          error(function (data, status) {
-            data = data || "Auth request failed";
-            console.log(data);
-            console.log(status);
-          });
-
-
-      }).
-      error(function (data, status) {
-        data = data || "Init request failed";
-        console.log(data);
-        console.log(status);
-      });
   };
 
-  $scope.accessStep = function () {
-    $scope.requestToken = $routeParams.oauth_token;
-    $scope.requestVerifier = $routeParams.oauth_verifier;
-    $scope.initTokenSecret = $cookieStore.get('initTokenSecret');
 
-    var oAuth = OAuthSimple($scope.consumerKey, $scope.consumerSecret);
-
-    var oAuthAccess = oAuth.sign({
-      action: $scope.accessAction,
-      path: $scope.accessUrl,
-      method: $scope.signatureMethod,
-      parameters: {
-        oauth_token: $scope.requestToken,
-        oauth_verifier: $scope.requestVerifier,
-        oauth_method: $scope.signatureMethod
-      },
-      signatures: {
-        oauth_token_secret: $scope.initTokenSecret
-      }
-    });
-
-    $http({
-      method: $scope.accessAction,
-      url: $scope.accessUrl,
-      headers: {
-        Authorization: oAuthAccess.header
-      }
-    }).
-      success(function (data) {
-        //Get access tokens
-        var accessData = oAuth._parseParameterString(data);
-
-        //set access tokens
-        $scope.token = accessData.oauth_token;
-        $scope.tokenSecret = accessData.oauth_token_secret;
-        $cookieStore.put('token', $scope.token);
-        $cookieStore.put('tokenSecret', $scope.tokenSecret);
-
-        $scope.isLogged = true;
-      }).
-      error(function (data, status) {
-        data = data || "Access request failed";
-        console.log(data);
-        console.log(status);
-      });
+  $scope.load = function () {
+    if ($scope.user.isLogged) {
+      $scope.customerInformation = $scope.user.customerInfo();
+    }
   };
-
-  $scope.getInfo = function () {
-    var infoUrl = '../api/rest/single/order';
-    var oAuth = OAuthSimple($scope.consumerKey, $scope.consumerSecret);
-    $scope.token = $cookieStore.get('token');
-    $scope.tokenSecret = $cookieStore.get('tokenSecret');
-
-    var oAuthAccess = oAuth.sign({
-      path: infoUrl,
-      method: $scope.signatureMethod,
-      parameters: {
-        oauth_token: $scope.token,
-        oauth_method: $scope.signatureMethod
-      },
-      signatures: {
-        oauth_token_secret: $scope.tokenSecret
-      }
-    });
-
-    console.log(oAuthAccess);
-
-    $http({
-      url: infoUrl,
-      method: 'POST',
-      headers: {
-        Authorization: oAuthAccess.header
-      }
-    }).
-      success(function (data) {
-        console.log(data);
-        //Get access tokens
-//        var accessData = oAuth._parseParameterString(data);
-
-
-      }).
-      error(function (data, status) {
-        data = data || "Customer info request failed";
-        console.log(data);
-        console.log(status);
-      });
-  }
-
 
 }
 

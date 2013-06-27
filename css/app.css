@@ -6536,3 +6536,21 @@ td.remove i[class*="foundicon-"] {
 form.order .row .row {
   margin: 0;
 }
+
+/* line 35, ../sass/app.scss */
+ul.products a.radius > img {
+  max-height: 173px;
+  max-width: 173px;
+}
+
+/* line 40, ../sass/app.scss */
+article.product a.radius > img {
+  max-height: 129px;
+  max-width: 129px;
+}
+
+/* line 45, ../sass/app.scss */
+article.product li a.radius > img {
+  max-height: 43px;
+  max-width: 43px;
+}

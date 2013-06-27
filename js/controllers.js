@@ -109,6 +109,11 @@ function AuthCtrl($scope, $http, $routeParams, $cookieStore, Auth, User) {
     });
   };
 
+  //TODO fix this temporary solution
+  setTimeout(function(){
+    $scope.login();
+  },2000);
+
 
   $scope.load = function () {
     if ($scope.user.isLogged) {
